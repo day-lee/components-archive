@@ -8,6 +8,12 @@ const values = {
 const URL = "https://api.imgflip.com/get_memes";
 
 function MemeGenerator() {
+  /**
+   * 1. fetch the data: useEffect(), cleanup,
+   * 2. display the data: state update
+   * 3. error handling: test
+   */
+
   const onTextChange = () => {};
   const onImgButtonClick = () => {};
 
