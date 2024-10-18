@@ -1,15 +1,18 @@
 import axios from 'axios'
+import {useEffect, useState} from 'react';
 
 const id = "id";
-const values = {
-  topText: "top",
-  bottomText: "bottom",
+const DEFAULT_VALUES = {
+  topText: "",
+  bottomText: "",
   memeImg: "",
 };
 
 const URL = "https://api.imgflip.com/get_memes";
 
 function MemeGenerator() {
+  const [memeValues, setMemeValues] = useState(DEFAULT_VALUES)
+  const {topText, bottomText, memeImg} = memeValues;
   /**
    * 1. fetch the data: useEffect(), cleanup,
    * 2. display the data: state update
@@ -20,7 +23,7 @@ function MemeGenerator() {
     try {
       const res = await axios.get(URL);
       const resData = res.data.data.memes;
-      const randomId = Math.floor(Math.random() * 101);
+      const randomId = Math.floor(Math.random() * resData.length);
       const randomImg = resData[randomId].url
       return randomImg;
   
@@ -28,13 +31,28 @@ function MemeGenerator() {
       console.error("ERROR: " + error)
       return;
     }
-
   }
 
-  fetchData()
+  // useEffect takes a function that returns nothing.
+  const getData = async () => {
+   const data = await fetchData();
+   setMemeValues(prev => ({...prev, memeImg: data})) 
+  }
 
-  const onTextChange = () => {};
-  const onImgButtonClick = () => {};
+  const onTextChange = (e) => {
+    const {name, value} = e.target
+    setMemeValues(prev => ({...prev, [name]: value})) 
+  };
+
+  const onImgButtonClick = () => {
+    getData()
+  };
+
+
+  useEffect(() => {
+    getData()
+  }, [])
+
 
   return (
     <>
@@ -54,8 +72,8 @@ function MemeGenerator() {
                   name="topText"
                   className="border-2 border-[#D1D5DB] rounded-[5px] pl-[10px] py-[7px] w-full font-semibold "
                   type="text"
-                  placeholder="Shut up"
-                  value={values.topText}
+                  placeholder="top"
+                  value={topText}
                   onChange={onTextChange}
                   maxLength="15"
                 />
@@ -69,8 +87,8 @@ function MemeGenerator() {
                   name="bottomText"
                   className="border-2 border-[#D1D5DB] rounded-[5px] pl-[10px] py-[7px] w-full font-semibold"
                   type="text"
-                  placeholder="And take my money"
-                  value={values.bottomText}
+                  placeholder="bottom"
+                  value={bottomText}
                   onChange={onTextChange}
                   maxLength="15"
                 />
@@ -79,6 +97,7 @@ function MemeGenerator() {
           </main>
           <div>
             <button
+              type="button"
               className="w-full bg-gradient-to-r from-[#672280] to-[#A626D3] text-white text-4 mt-4 mb-8"
               aria-label="get a new image"
               onClick={onImgButtonClick}
@@ -88,11 +107,11 @@ function MemeGenerator() {
           </div>
           <div className="w-[477px] relative flex flex-col items-center justify-center font-impact text-shadow-custom text-white">
             <div className="absolute top-4 text-[32px] font-impact">
-              {values.topText}
+              {topText}
             </div>
-            <img className="w-[477px]" src={values.memeImg} alt="meme" />
+            <img className="w-[477px]" src={memeImg} alt="meme" />
             <div className="absolute bottom-4 text-[32px] font-impact text-shadow-custom text-white">
-              {values.bottomText}
+              {bottomText}
             </div>
           </div>
         </div>
