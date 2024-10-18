@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 const id = "id";
 const values = {
   topText: "top",
@@ -13,6 +15,23 @@ function MemeGenerator() {
    * 2. display the data: state update
    * 3. error handling: test
    */
+
+  const fetchData = async () => {
+    try {
+      const res = await axios.get(URL);
+      const resData = res.data.data.memes;
+      const randomId = Math.floor(Math.random() * 101);
+      const randomImg = resData[randomId].url
+      return randomImg;
+  
+    } catch(error) {
+      console.error("ERROR: " + error)
+      return;
+    }
+
+  }
+
+  fetchData()
 
   const onTextChange = () => {};
   const onImgButtonClick = () => {};
