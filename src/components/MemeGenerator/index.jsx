@@ -1,5 +1,7 @@
 import axios from 'axios'
 import {useEffect, useState} from 'react';
+import fallbackImg from '../assets/logo192.png'
+
 
 const id = "id";
 const DEFAULT_VALUES = {
@@ -8,11 +10,18 @@ const DEFAULT_VALUES = {
   memeImg: "",
 };
 
+const DEFAULT_ERROR = {
+  errorStatus: false,
+  errorMsg: ""
+}
+
 const URL = "https://api.imgflip.com/get_memes";
 
 function MemeGenerator() {
   const [memeValues, setMemeValues] = useState(DEFAULT_VALUES)
+  const [errors, setErrors] = useState(DEFAULT_ERROR)
   const {topText, bottomText, memeImg} = memeValues;
+  
   /**
    * 1. fetch the data: useEffect(), cleanup,
    * 2. display the data: state update
@@ -29,7 +38,7 @@ function MemeGenerator() {
   
     } catch(error) {
       console.error("ERROR: " + error)
-      return;
+      return fallbackImg;
     }
   }
 
@@ -41,7 +50,15 @@ function MemeGenerator() {
 
   const onTextChange = (e) => {
     const {name, value} = e.target
-    setMemeValues(prev => ({...prev, [name]: value})) 
+    if (value.length > 14 ){
+      setErrors({  errorStatus: true,
+        errorMsg: "The maximum length is 15 characters."})
+      
+    } else {
+      setMemeValues(prev => ({...prev, [name]: value})) 
+      setErrors(DEFAULT_ERROR)
+    }
+   
   };
 
   const onImgButtonClick = () => {
@@ -93,7 +110,9 @@ function MemeGenerator() {
                   maxLength="15"
                 />
               </div>
+              
             </form>
+            {errors.errorStatus && <div className='mt-2 text-red-500'>{errors.errorMsg}</div> }
           </main>
           <div>
             <button
@@ -109,7 +128,7 @@ function MemeGenerator() {
             <div className="absolute top-4 text-[32px] font-impact">
               {topText}
             </div>
-            <img className="w-[477px]" src={memeImg} alt="meme" />
+            <img className="w-[477px]" src={memeImg || fallbackImg} alt="meme" />
             <div className="absolute bottom-4 text-[32px] font-impact text-shadow-custom text-white">
               {bottomText}
             </div>
