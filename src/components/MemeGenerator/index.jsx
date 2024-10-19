@@ -1,9 +1,10 @@
 import axios from 'axios'
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useId, useCallback} from 'react';
 import fallbackImg from '../assets/logo192.png'
 
 
-const id = "id";
+
+
 const DEFAULT_VALUES = {
   topText: "",
   bottomText: "",
@@ -21,12 +22,8 @@ function MemeGenerator() {
   const [memeValues, setMemeValues] = useState(DEFAULT_VALUES)
   const [errors, setErrors] = useState(DEFAULT_ERROR)
   const {topText, bottomText, memeImg} = memeValues;
-  
-  /**
-   * 1. fetch the data: useEffect(), cleanup,
-   * 2. display the data: state update
-   * 3. error handling: test
-   */
+
+  const id = useId();
 
   const fetchData = async () => {
     try {
@@ -43,10 +40,11 @@ function MemeGenerator() {
   }
 
   // useEffect takes a function that returns nothing.
-  const getData = async () => {
+  // memoisation
+  const getData = useCallback(async () => {
    const data = await fetchData();
    setMemeValues(prev => ({...prev, memeImg: data})) 
-  }
+  }, [])
 
   const onTextChange = (e) => {
     const {name, value} = e.target
