@@ -1,9 +1,6 @@
-import axios from 'axios'
-import {useEffect, useState, useId, useCallback} from 'react';
-import fallbackImg from '../assets/logo192.png'
-
-
-
+import axios from "axios";
+import { useCallback, useEffect, useId, useState } from "react";
+import fallbackImg from "../assets/logo192.png";
 
 const DEFAULT_VALUES = {
   topText: "",
@@ -13,15 +10,15 @@ const DEFAULT_VALUES = {
 
 const DEFAULT_ERROR = {
   errorStatus: false,
-  errorMsg: ""
-}
+  errorMsg: "",
+};
 
 const URL = "https://api.imgflip.com/get_memes";
 
 function MemeGenerator() {
-  const [memeValues, setMemeValues] = useState(DEFAULT_VALUES)
-  const [errors, setErrors] = useState(DEFAULT_ERROR)
-  const {topText, bottomText, memeImg} = memeValues;
+  const [memeValues, setMemeValues] = useState(DEFAULT_VALUES);
+  const [errors, setErrors] = useState(DEFAULT_ERROR);
+  const { topText, bottomText, memeImg } = memeValues;
 
   const id = useId();
 
@@ -30,48 +27,45 @@ function MemeGenerator() {
       const res = await axios.get(URL);
       const resData = res.data.data.memes;
       const randomId = Math.floor(Math.random() * resData.length);
-      const randomImg = resData[randomId].url
+      const randomImg = resData[randomId].url;
       return randomImg;
-  
-    } catch(error) {
-      console.error("ERROR: " + error)
+    } catch (error) {
+      console.error("ERROR: " + error);
       return fallbackImg;
     }
-  }
+  };
 
   // useEffect takes a function that returns nothing.
   // memoisation
   const getData = useCallback(async () => {
-   const data = await fetchData();
-   setMemeValues(prev => ({...prev, memeImg: data})) 
-  }, [])
+    const data = await fetchData();
+    setMemeValues((prev) => ({ ...prev, memeImg: data }));
+  }, []);
 
   const onTextChange = (e) => {
-    const {name, value} = e.target
-    if (value.length > 14 ){
-      setErrors({  errorStatus: true,
-        errorMsg: "The maximum length is 15 characters."})
-      
+    const { name, value } = e.target;
+    if (value.length > 14) {
+      setErrors({
+        errorStatus: true,
+        errorMsg: "The maximum length is 15 characters.",
+      });
     } else {
-      setMemeValues(prev => ({...prev, [name]: value})) 
-      setErrors(DEFAULT_ERROR)
+      setMemeValues((prev) => ({ ...prev, [name]: value }));
+      setErrors(DEFAULT_ERROR);
     }
-   
   };
 
   const onImgButtonClick = () => {
-    getData()
+    getData();
   };
 
-
   useEffect(() => {
-    getData()
-  }, [])
-
+    getData();
+  }, []);
 
   return (
     <>
-      <div className="w-full border-[1px] border-gray">
+      <div className="w-1/2 border-[1px] border-gray">
         <header className="flex items-center bg-gradient-to-r from-[#672280] to-[#A626D3] w-[550px] h-[65px] text-white font-bold p-4">
           <h2>Meme generator</h2>
         </header>
@@ -83,7 +77,7 @@ function MemeGenerator() {
                   Top text
                 </label>
                 <input
-                  id="top-text"
+                  id={id + "top-text"}
                   name="topText"
                   className="border-2 border-[#D1D5DB] rounded-[5px] pl-[10px] py-[7px] w-full font-semibold "
                   type="text"
@@ -98,7 +92,7 @@ function MemeGenerator() {
                   Bottom text
                 </label>
                 <input
-                  id="bottom-text"
+                  id={id + "bottom-text"}
                   name="bottomText"
                   className="border-2 border-[#D1D5DB] rounded-[5px] pl-[10px] py-[7px] w-full font-semibold"
                   type="text"
@@ -108,9 +102,10 @@ function MemeGenerator() {
                   maxLength="15"
                 />
               </div>
-              
             </form>
-            {errors.errorStatus && <div className='mt-2 text-red-500'>{errors.errorMsg}</div> }
+            {errors.errorStatus && (
+              <div className="mt-2 text-red-500">{errors.errorMsg}</div>
+            )}
           </main>
           <div>
             <button
@@ -126,7 +121,11 @@ function MemeGenerator() {
             <div className="absolute top-4 text-[32px] font-impact">
               {topText}
             </div>
-            <img className="w-[477px]" src={memeImg || fallbackImg} alt="meme" />
+            <img
+              className="w-[477px]"
+              src={memeImg || fallbackImg}
+              alt="meme"
+            />
             <div className="absolute bottom-4 text-[32px] font-impact text-shadow-custom text-white">
               {bottomText}
             </div>
