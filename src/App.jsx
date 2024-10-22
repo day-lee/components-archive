@@ -1,5 +1,6 @@
-import React, { Suspense, useState } from "react";
+import React, { useState } from "react";
 import "./App.css";
+import SainsburysCart from "./components/SainsburysCart";
 // import MemeGenerator from "./components/MemeGenerator";
 // import Supermarket from "./components/Supermarket";
 
@@ -10,16 +11,16 @@ function App() {
 
   return (
     <>
-      <div className="fixed top-0 left-0 w-full h-16 p-4 border-2 bg-gray-500 text-white">
+      <header className="fixed top-0 left-0 w-full h-16 p-4 border-2 bg-gray-500 text-white">
         <p className="font-bold"> Components playground</p>
-      </div>
-      <div className="mt-16">
+      </header>
+      <main className="flex-grow bg-red-200 p-20">
         {/* <MemeGenerator /> */}
-        {/* <Supermarket /> */}
-        <Suspense fallback={<div>Loading...</div>}>
+        {/* <Suspense fallback={<div>Loading...</div>}>
           <Supermarket />
-        </Suspense>
-      </div>
+        </Suspense> */}
+        <SainsburysCart />
+      </main>
     </>
   );
 }
