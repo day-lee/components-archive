@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Cart from "./Cart";
 
 const URL = "https://jsainsburyplc.github.io/front-end-test/products.json";
-
 const DEFAULT_ERROR = { errorStatus: false, errorMsg: "" };
 /*
  * Build the HTML structure.
@@ -22,7 +22,7 @@ const DEFAULT_ERROR = { errorStatus: false, errorMsg: "" };
 function SainsburysCart() {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(DEFAULT_ERROR);
-  const [cart, setCart] = useState(0);
+  const [cart, setCart] = useState([]);
 
   const { errorStatus, errorMsg } = error;
 
@@ -30,7 +30,6 @@ function SainsburysCart() {
     try {
       const res = await axios.get(URL);
       const resData = res.data;
-      //console.log(resData);
       setProducts(resData);
       setError(DEFAULT_ERROR);
     } catch (error) {
@@ -41,9 +40,8 @@ function SainsburysCart() {
     }
   };
 
-  const addToCart = () => {
-    setCart((prev) => prev + 1);
-    // {lines:[{productId: "", price: "", quantity:0}], totalQuantity:0, totalPrice:0}
+  const addToCart = (productId) => {
+    setCart((prev) => [...prev, productId]);
   };
 
   useEffect(() => {
@@ -54,7 +52,7 @@ function SainsburysCart() {
     <>
       <div> Sainsburys cart header </div>
       <div>
-        <div>Your basket ({cart} items) </div>
+        <Cart allProduct={products} cart={cart} />
       </div>
       <div>
         {errorStatus && <div>{errorMsg}</div>}
@@ -68,7 +66,9 @@ function SainsburysCart() {
                   <div>{title}</div>
                   <div>{sku}</div>
                   <div>£{price}</div>
-                  <button onClick={addToCart}>Add to Basket</button>
+                  <button onClick={() => addToCart(productId)}>
+                    Add to Basket
+                  </button>
                 </li>
               );
             })}
