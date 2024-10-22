@@ -1,4 +1,7 @@
-const URL = "https://jsainsburyplc.github.io/front-end-test/products.json.";
+import axios from "axios";
+import { useState } from "react";
+
+const URL = "https://jsainsburyplc.github.io/front-end-test/products.json";
 
 /*
  * Build the HTML structure.
@@ -16,6 +19,21 @@ const URL = "https://jsainsburyplc.github.io/front-end-test/products.json.";
  */
 
 function SainsburysCart() {
+  const [products, setProducts] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      const res = await axios.get(URL);
+      const resData = res.data;
+      //console.log(resData);
+      setProducts(resData);
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+  };
+  fetchData();
+
   return (
     <>
       <div> Sainsburys cart header </div>
