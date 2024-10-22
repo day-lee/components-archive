@@ -44,6 +44,21 @@ function SainsburysCart() {
     setCart((prev) => [...prev, productId]);
   };
 
+  const decreaseCartItem = (productId) => {
+    const decreaseIndex = cart.indexOf(productId);
+    let newCart = [
+      ...cart.slice(0, decreaseIndex),
+      ...cart.slice(decreaseIndex + 1),
+    ];
+
+    setCart(newCart);
+  };
+
+  const removeFromCart = (productId) => {
+    const filteredProduct = cart.filter((id) => id !== productId);
+    setCart(filteredProduct);
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -52,7 +67,13 @@ function SainsburysCart() {
     <>
       <div> Sainsburys cart header </div>
       <div>
-        <Cart allProduct={products} cart={cart} />
+        <Cart
+          allProduct={products}
+          cart={cart}
+          addToCart={addToCart}
+          decreaseCartItem={decreaseCartItem}
+          removeFromCart={removeFromCart}
+        />
       </div>
       <div>
         {errorStatus && <div>{errorMsg}</div>}

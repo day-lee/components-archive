@@ -1,14 +1,12 @@
 import { useState } from "react";
-
-const DEFAULT_CART_SUMMARY = {
-  lines: [],
-  totalQuantity: 0,
-  totalPrice: 0,
-};
-
-function Cart({ allProduct, cart }) {
-  const [cartSummary, setCartSummary] = useState(DEFAULT_CART_SUMMARY);
-
+function Cart({
+  allProduct,
+  cart,
+  addToCart,
+  decreaseCartItem,
+  removeFromCart,
+}) {
+  const [isHovered, setIsHovered] = useState(false);
   // count the items in the cart
   const counter = new Map();
   cart.forEach((productId) =>
@@ -47,19 +45,36 @@ function Cart({ allProduct, cart }) {
           <p>Your basket ({totalQuantity} items) </p>
         </div>
         <div>
-          <p> Total: {totalPrice} </p>
+          <p> Total: {totalPrice.toFixed(2)} </p>
         </div>
-        <ul>
-          {lines.map((item) => {
-            return (
-              <li key={item.productId}>
-                <div>{item.title}</div>
-                <div>{item.quantity}</div>
-                <div>{item.subtotal}</div>
-              </li>
-            );
-          })}
-        </ul>
+        <button
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          show Item
+        </button>
+        {cart.length > 0 && isHovered && (
+          <>
+            <ul>
+              {lines.map((item) => {
+                return (
+                  <li key={item.productId}>
+                    <div>{item.title}</div>
+                    <div>{item.quantity}</div>
+                    <div>{item.subtotal}</div>
+                    <button onClick={() => addToCart(item.productId)}>+</button>
+                    <button onClick={() => decreaseCartItem(item.productId)}>
+                      -
+                    </button>
+                    <button onClick={() => removeFromCart(item.productId)}>
+                      remove
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </>
+        )}
       </div>
     </div>
   );
