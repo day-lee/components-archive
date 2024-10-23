@@ -12,7 +12,7 @@ function App() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full h-16 p-4 bg-gray-500 text-white">
+      <header className="fixed top-0 left-0 w-full p-2 bg-gray-500 text-white">
         <nav>
           <div className="flex items-center justify-between">
             <div className="text-xl sm:text-2xl font-bold">
