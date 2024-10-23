@@ -1,9 +1,3 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import Cart from "./Cart";
-
-const URL = "https://jsainsburyplc.github.io/front-end-test/products.json";
-const DEFAULT_ERROR = { errorStatus: false, errorMsg: "" };
 /*
  * Build the HTML structure.
  * Fetch data.
@@ -18,6 +12,13 @@ const DEFAULT_ERROR = { errorStatus: false, errorMsg: "" };
  * Add styling - minimize, but ensure accessibility and responsiveness.
  * Include accessibility features.
  */
+
+import axios from "axios";
+import { useEffect, useState } from "react";
+import Cart from "./Cart";
+
+const URL = "https://jsainsburyplc.github.io/front-end-test/products.json";
+const DEFAULT_ERROR = { errorStatus: false, errorMsg: "" };
 
 function SainsburysCart() {
   const [products, setProducts] = useState([]);
@@ -34,7 +35,7 @@ function SainsburysCart() {
       setError(DEFAULT_ERROR);
     } catch (error) {
       console.error(error);
-      const errorMsg = "Nothing to display";
+      const errorMsg = "Connection failed: Nothing to display";
       setError({ errorStatus: true, errorMsg });
       return;
     }
@@ -65,32 +66,51 @@ function SainsburysCart() {
 
   return (
     <>
-      <div> Sainsburys cart header </div>
-      <div>
-        <Cart
-          allProduct={products}
-          cart={cart}
-          addToCart={addToCart}
-          decreaseCartItem={decreaseCartItem}
-          removeFromCart={removeFromCart}
-        />
-      </div>
-      <div>
-        {errorStatus && <div>{errorMsg}</div>}
+      <header className="flex justify-between items-center">
+        <div className="text-xl sm:text-2xl text-orange-600 font-extrabold">
+          Sainsbury's Cart
+        </div>
         <div>
-          <ul>
+          <Cart
+            allProduct={products}
+            cart={cart}
+            addToCart={addToCart}
+            decreaseCartItem={decreaseCartItem}
+            removeFromCart={removeFromCart}
+          />
+        </div>
+      </header>
+
+      <div className="flex items-center justify-center">
+        {errorStatus && <div>{errorMsg}</div>}
+        <div className="mt-[100px]">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1">
             {products.map((item) => {
               const { title, productId, image, sku, price } = item;
               return (
-                <li key={productId}>
-                  <img src={image} alt={title} />
-                  <div>{title}</div>
-                  <div>{sku}</div>
-                  <div>£{price}</div>
-                  <button onClick={() => addToCart(productId)}>
-                    Add to Basket
-                  </button>
-                </li>
+                <div className="border-2 p-4 bg-white min-w-[200px]">
+                  <li key={productId}>
+                    <div className="flex justify-center p-1">
+                      <img className="" src={image} alt={title} />
+                    </div>
+                    <div className="flex text-left p-1 mb-10 h-20 overflow-hidden font-medium">
+                      <span>{title}</span>
+                    </div>
+                    <div className="flex justify-start p-1 text-xs text-gray-500">
+                      <span>{sku}</span>
+                    </div>
+                    <div className="flex justify-start p-1 mb-2 text-xl font-bold">
+                      <span>£{price}</span>
+                    </div>
+                    <button
+                      className="w-full bg-[#F06c00] text-white font-bold rounded-sm"
+                      aria-label="add to basket"
+                      onClick={() => addToCart(productId)}
+                    >
+                      Add
+                    </button>
+                  </li>
+                </div>
               );
             })}
           </ul>

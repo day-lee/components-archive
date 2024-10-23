@@ -11,10 +11,10 @@ function App() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full h-16 p-4 border-2 bg-gray-500 text-white">
-        <p className="font-bold"> Components playground</p>
+      <header className="fixed top-0 left-0 w-full h-16 p-4 bg-gray-500 text-white">
+        <p className="text-xl sm:text-2xl font-bold"> Components playground</p>
       </header>
-      <main className="flex-grow bg-red-200 p-20">
+      <main className="pt-4 w-full">
         {/* <MemeGenerator /> */}
         {/* <Suspense fallback={<div>Loading...</div>}>
           <Supermarket />
