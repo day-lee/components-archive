@@ -43,7 +43,7 @@ function Cart({
     <div className="flex">
       <div className="mt-2 w-full">
         <button
-          className="bg-[#F06c00] text-white font-bold p-1"
+          className="bg-[#F06c00] hover:bg-[#e55000] text-white font-bold p-1"
           onClick={() => setIsHovered(!isHovered)}
           //   onMouseOver={() => setIsHovered(true)}
           //   onMouseLeave={() => setIsHovered(false)}
@@ -89,7 +89,7 @@ function Cart({
                               £{item.subtotal}
                             </div>
                             <button
-                              className="bg-[#F06c00] w-20 p-1 my-3 text-white font-semibold"
+                              className="bg-[#F06c00] hover:bg-[#e55000] w-20 p-1 my-3 text-white font-semibold"
                               aria-label="remove the item"
                               onClick={() => removeFromCart(item.productId)}
                             >
@@ -98,7 +98,7 @@ function Cart({
                           </div>
                           <div className="flex flex-col gap-1">
                             <button
-                              className="bg-[#F06c00] w-10 text-2xl p-1 m-1 text-white font-semibold"
+                              className="bg-[#F06c00] hover:bg-[#e55000] w-10 text-2xl p-1 m-1 text-white font-semibold"
                               aria-label="increase the quantity"
                               onClick={() => addToCart(item.productId)}
                             >
@@ -108,7 +108,7 @@ function Cart({
                               {item.quantity}
                             </div>
                             <button
-                              className="bg-[#F06c00] w-10 text-2xl p-1 m-1 text-white font-semibold"
+                              className="bg-[#F06c00] hover:bg-[#e55000] w-10 text-2xl p-1 m-1 text-white font-semibold"
                               aria-label="decrease the quantity"
                               onClick={() => decreaseCartItem(item.productId)}
                             >
@@ -128,7 +128,7 @@ function Cart({
                   </div>
                   <div>
                     <button
-                      className="bg-[#F06c00] text-white font-bold w-[200px] cursor-not-allowed"
+                      className="bg-[#F06c00] hover:bg-[#e55000] text-white font-bold w-[200px] cursor-not-allowed"
                       aria-label="book a slot"
                     >
                       Book a slot

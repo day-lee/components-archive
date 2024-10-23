@@ -103,7 +103,7 @@ function SainsburysCart() {
                       <span>£{price}</span>
                     </div>
                     <button
-                      className="w-full bg-[#F06c00] text-white font-bold rounded-sm"
+                      className="w-full bg-[#F06c00] hover:bg-[#e55000] text-white font-bold rounded-sm"
                       aria-label="add to basket"
                       onClick={() => addToCart(productId)}
                     >
