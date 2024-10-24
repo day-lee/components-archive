@@ -137,8 +137,9 @@ function Cart({
                 </div>
               </>
             ) : (
-              <div className="flex w-full h-[150px] justify-center items-center">
+              <div className="flex flex-col gap-4 w-full h-[150px] justify-center items-center">
                 <p>Your trolley is empty.</p>
+                <p className="font-bold">Start shopping by adding items!</p>
               </div>
             )}
           </div>

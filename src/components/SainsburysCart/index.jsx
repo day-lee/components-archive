@@ -11,6 +11,8 @@
  *  - View: Basket hover - show the details of the cart.
  * Add styling - minimize, but ensure accessibility and responsiveness.
  * Include accessibility features.
+ *
+ * add loading state rendering
  */
 
 import axios from "axios";
@@ -23,6 +25,7 @@ const DEFAULT_ERROR = { errorStatus: false, errorMsg: "" };
 function SainsburysCart() {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(DEFAULT_ERROR);
+  const [isLoading, setIsLoading] = useState(false);
   const [cart, setCart] = useState([]);
 
   const { errorStatus, errorMsg } = error;
@@ -31,13 +34,17 @@ function SainsburysCart() {
     try {
       const res = await axios.get(URL);
       const resData = res.data;
+      setIsLoading(true);
       setProducts(resData);
       setError(DEFAULT_ERROR);
     } catch (error) {
-      console.error(error);
+      console.log(error.message);
       const errorMsg = "Connection failed: Nothing to display";
+      setIsLoading(false);
       setError({ errorStatus: true, errorMsg });
       return;
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -45,6 +52,7 @@ function SainsburysCart() {
     setCart((prev) => [...prev, productId]);
   };
 
+  // cart ordering changes since indexOf deturns the first occurrences of index
   const decreaseCartItem = (productId) => {
     const decreaseIndex = cart.indexOf(productId);
     let newCart = [
@@ -82,9 +90,28 @@ function SainsburysCart() {
       </header>
 
       <div className="flex items-center justify-center">
-        {errorStatus && <div>{errorMsg}</div>}
+        {errorStatus && (
+          <div className="flex flex-col  items-center justify-center pt-[30%] ">
+            {errorMsg}
+            <div className="m-2">
+              <button
+                className="border-2 bg-[#F06c00] hover:bg-[#e55000] text-white font-bold rounded-3xl"
+                aria-label="retry to connect"
+                onClick={fetchData}
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+        )}
+        {isLoading && (
+          <div className="pt-[30%]">
+            <span>Loading ...</span>
+          </div>
+        )}
+
         <div className="mt-[100px]">
-          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {products.map((item) => {
               const { title, productId, image, sku, price } = item;
               return (

@@ -13,7 +13,7 @@ function App() {
   return (
     <>
       <header className="fixed top-0 left-0 w-full p-2 bg-gray-500 text-white">
-        <nav>
+        <div>
           <div className="flex items-center justify-between">
             <div className="text-xl sm:text-2xl font-bold">
               Components playground
@@ -26,7 +26,7 @@ function App() {
                 <img src={hamburgerMenu} alt="menu" />
               </button>
             </div>
-            <div
+            <nav
               className={`absolute top-16 right-4 bg-gray-600 flex-col  ${
                 isOpen ? "block" : "hidden"
               }`}
@@ -34,9 +34,9 @@ function App() {
               <div className="block text-white px-4 py-2">Meme Generator</div>
               <div className="block text-white px-4 py-2">Sainsbury's 1</div>
               <div className="block text-white px-4 py-2">Sainsbury's 2</div>
-            </div>
+            </nav>
           </div>
-        </nav>
+        </div>
       </header>
       <main className="pt-4 w-full">
         <SainsburysCart />
