@@ -66,7 +66,7 @@ function Cart({
         </button>
 
         {isHovered && (
-          <div className="hidden sm:block absolute top-[130px] right-12 bg-gray-200 shadow-2xl border-[1px] w-1/2 max-h-[500px] min-h-[200px] overflow-scroll">
+          <div className="sm:block absolute top-[130px] right-0 sm:right-12 bg-gray-200 shadow-2xl border-[1px] sm:w-1/2 max-h-[500px] min-h-[200px] overflow-scroll">
             <div className="text-xl font-semibold bg-white w-full py-2">
               My trolley{" "}
               <span className="text-base">({totalQuantity} items)</span>
@@ -88,11 +88,11 @@ function Cart({
                               alt={item.title}
                             />
                           </div>
-                          <div className="">
-                            <div className=" pb-2 pr-2 w-[200px] text-sm">
+                          <div className="flex flex-col justify-start ml-5 sm:ml-0">
+                            <div className="text-left pb-2 pr-2 w-[200px] text-sm">
                               {item.title}
                             </div>
-                            <div className=" text-lg font-bold">
+                            <div className="text-left text-lg font-bold">
                               £{item.subtotal}
                             </div>
                             <button
@@ -144,7 +144,7 @@ function Cart({
                 </div>
               </>
             ) : (
-              <div className="flex flex-col gap-4 w-full h-[150px] justify-center items-center">
+              <div className="flex flex-col gap-4 p-10 w-full h-[30vh] justify-center items-center">
                 <p>Your trolley is empty.</p>
                 <p className="font-bold">Start shopping by adding items!</p>
               </div>
