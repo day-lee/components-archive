@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 function Cart({
   allProduct,
   cart,
@@ -7,36 +7,43 @@ function Cart({
   removeFromCart,
 }) {
   const [isHovered, setIsHovered] = useState(false);
-  // count the items in the cart
-  const counter = new Map();
-  cart.forEach((productId) =>
-    counter.set(productId, (counter.get(productId) ?? 0) + 1)
-  );
 
-  const productLookup = new Map(
-    allProduct.map((product) => [product.productId, product])
-  );
+  const cartInformation = useMemo(() => {
+    console.time("memoised cart calculation");
 
-  // summary of cart items
-  const cartInformation = Array.from(counter).reduce(
-    (acc, item) => {
-      const productId = item[0];
-      const data = productLookup.get(productId);
-      const image = data.image;
-      const title = data.title;
-      const quantity = counter.get(productId);
-      const subtotal = parseFloat((quantity * data.price).toFixed(2));
-      acc.lines.push({ image, productId, title, quantity, subtotal });
-      acc.totalQuantity += quantity;
-      acc.totalPrice += subtotal;
-      return acc;
-    },
-    {
-      lines: [],
-      totalQuantity: 0,
-      totalPrice: 0,
-    }
-  );
+    const counter = new Map();
+    cart.forEach((productId) =>
+      counter.set(productId, (counter.get(productId) ?? 0) + 1)
+    );
+
+    const productLookup = new Map(
+      allProduct.map((product) => [product.productId, product])
+    );
+
+    // summary of cart items
+    const result = Array.from(counter).reduce(
+      (acc, item) => {
+        const productId = item[0];
+        const data = productLookup.get(productId);
+        const image = data.image;
+        const title = data.title;
+        const quantity = counter.get(productId);
+        const subtotal = parseFloat((quantity * data.price).toFixed(2));
+        acc.lines.push({ image, productId, title, quantity, subtotal });
+        acc.totalQuantity += quantity;
+        acc.totalPrice += subtotal;
+        return acc;
+      },
+      {
+        lines: [],
+        totalQuantity: 0,
+        totalPrice: 0,
+      }
+    );
+    console.timeEnd("memoised cart calculation");
+    return result;
+  }, [cart, allProduct]);
+
   const { lines, totalQuantity, totalPrice } = cartInformation;
 
   return (

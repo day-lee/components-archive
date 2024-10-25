@@ -115,7 +115,10 @@ function SainsburysCart() {
             {products.map((item) => {
               const { title, productId, image, sku, price } = item;
               return (
-                <div className="border-2 p-4 bg-white min-w-[200px]">
+                <div
+                  className="border-2 p-4 bg-white min-w-[200px]"
+                  key={productId}
+                >
                   <li key={productId}>
                     <div className="flex justify-center p-1">
                       <img className="" src={image} alt={title} />
