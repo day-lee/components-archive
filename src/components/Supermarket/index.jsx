@@ -5,6 +5,9 @@ API fetch, error, loading handling
 
 Update:
 Add cart 
+Cart State Management:
+
+Since the cart only stores productIds, it's efficient. However, there may be edge cases when adding duplicate items if productId is not unique. You might want to store more detailed objects like { productId, quantity } to improve scalability.
 pagination 
 */
 
