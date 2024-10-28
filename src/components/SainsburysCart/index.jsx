@@ -21,6 +21,7 @@ import Cart from "./Cart";
 
 const URL = "https://jsainsburyplc.github.io/front-end-test/products.json";
 const DEFAULT_ERROR = { errorStatus: false, errorMsg: "" };
+const errorMessage = "Connection failed: Nothing to display";
 
 function SainsburysCart() {
   const [products, setProducts] = useState([]);
@@ -39,7 +40,7 @@ function SainsburysCart() {
       setError(DEFAULT_ERROR);
     } catch (error) {
       console.log(error.message);
-      const errorMsg = "Connection failed: Nothing to display";
+      const errorMsg = errorMessage;
       setIsLoading(false);
       setError({ errorStatus: true, errorMsg });
       return;

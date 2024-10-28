@@ -66,7 +66,7 @@ function Cart({
         </button>
 
         {isHovered && (
-          <div className="sm:block absolute top-[130px] right-0 sm:right-12 bg-gray-200 shadow-2xl border-[1px] sm:w-1/2 max-h-[500px] min-h-[200px] overflow-scroll">
+          <div className="sm:block absolute top-[130px] right-0 sm:right-12 bg-gray-200 shadow-2xl border-[1px] sm:w-1/4 min-w-[410px] max-h-[500px] min-h-[200px] overflow-scroll">
             <div className="text-xl font-semibold bg-white w-full py-2">
               My trolley{" "}
               <span className="text-base">({totalQuantity} items)</span>
