@@ -24,10 +24,10 @@ const DEFAULT_ERROR = { errorStatus: false, errorMsg: "" };
 const errorMessage = "Connection failed: Nothing to display";
 
 function SainsburysCart() {
-  const [products, setProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [error, setError] = useState(DEFAULT_ERROR);
   const [isLoading, setIsLoading] = useState(false);
-  const [cart, setCart] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
 
   const { errorStatus, errorMsg } = error;
 
@@ -36,7 +36,7 @@ function SainsburysCart() {
       const res = await axios.get(URL);
       const resData = res.data;
       setIsLoading(true);
-      setProducts(resData);
+      setAllProducts(resData);
       setError(DEFAULT_ERROR);
     } catch (error) {
       console.log(error.message);
@@ -49,24 +49,47 @@ function SainsburysCart() {
     }
   };
 
-  const addToCart = (productId) => {
-    setCart((prev) => [...prev, productId]);
+  const increaseCartItem = (productId) => {
+    setCartItems((currentItems) => {
+      if (
+        currentItems.find((item) => item.productId === productId) === undefined
+      ) {
+        return [...currentItems, { productId, quantity: 1 }];
+      } else {
+        return currentItems.map((item) => {
+          if (item.productId === productId) {
+            return { ...item, quantity: item.quantity + 1 };
+          } else {
+            return item;
+          }
+        });
+      }
+    });
   };
 
-  // cart ordering changes since indexOf deturns the first occurrences of index
   const decreaseCartItem = (productId) => {
-    const decreaseIndex = cart.indexOf(productId);
-    let newCart = [
-      ...cart.slice(0, decreaseIndex),
-      ...cart.slice(decreaseIndex + 1),
-    ];
-
-    setCart(newCart);
+    setCartItems((currentItems) => {
+      if (
+        currentItems.find((item) => item.productId === productId).quantity === 1
+      ) {
+        return currentItems.filter((item) => item.productId !== productId);
+      } else {
+        return currentItems.map((item) => {
+          if (item.productId === productId) {
+            return { ...item, quantity: item.quantity - 1 };
+          } else {
+            return item;
+          }
+        });
+      }
+    });
   };
 
   const removeFromCart = (productId) => {
-    const filteredProduct = cart.filter((id) => id !== productId);
-    setCart(filteredProduct);
+    const filteredProduct = cartItems.filter(
+      (item) => item.productId !== productId
+    );
+    setCartItems(filteredProduct);
   };
 
   useEffect(() => {
@@ -81,9 +104,9 @@ function SainsburysCart() {
         </div>
         <div>
           <Cart
-            allProduct={products}
-            cart={cart}
-            addToCart={addToCart}
+            allProducts={allProducts}
+            cartItems={cartItems}
+            increaseCartItem={increaseCartItem}
             decreaseCartItem={decreaseCartItem}
             removeFromCart={removeFromCart}
           />
@@ -113,7 +136,7 @@ function SainsburysCart() {
 
         <div className="mt-[100px]">
           <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {products.map((item) => {
+            {allProducts.map((item) => {
               const { title, productId, image, sku, price } = item;
               return (
                 <div
@@ -136,7 +159,7 @@ function SainsburysCart() {
                     <button
                       className="w-full bg-[#F06c00] hover:bg-[#e55000] text-white font-bold rounded-sm"
                       aria-label="add to basket"
-                      onClick={() => addToCart(productId)}
+                      onClick={() => increaseCartItem(productId)}
                     >
                       Add
                     </button>

@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 function Cart({
-  allProduct,
-  cart,
-  addToCart,
+  allProducts,
+  cartItems,
+  increaseCartItem,
   decreaseCartItem,
   removeFromCart,
 }) {
@@ -11,27 +11,24 @@ function Cart({
   const cartInformation = useMemo(() => {
     console.time("memoised cart calculation");
 
-    const counter = new Map();
-    cart.forEach((productId) =>
-      counter.set(productId, (counter.get(productId) ?? 0) + 1)
-    );
-
     const productLookup = new Map(
-      allProduct.map((product) => [product.productId, product])
+      allProducts.map((product) => [product.productId, product])
     );
 
-    // summary of cart items
-    const result = Array.from(counter).reduce(
+    const result = cartItems.reduce(
       (acc, item) => {
-        const productId = item[0];
-        const data = productLookup.get(productId);
-        const image = data.image;
-        const title = data.title;
-        const quantity = counter.get(productId);
-        const subtotal = parseFloat((quantity * data.price).toFixed(2));
-        acc.lines.push({ image, productId, title, quantity, subtotal });
-        acc.totalQuantity += quantity;
-        acc.totalPrice += subtotal;
+        const id = item.productId;
+        if (id !== "") {
+          const data = productLookup.get(id);
+          const image = data.image;
+          const title = data.title;
+          const quantity = item["quantity"];
+          const subtotal = parseFloat((quantity * data.price).toFixed(2));
+          acc.lines.push({ image, id, title, quantity, subtotal });
+          acc.totalQuantity += quantity;
+          acc.totalPrice += subtotal;
+          return acc;
+        }
         return acc;
       },
       {
@@ -42,7 +39,7 @@ function Cart({
     );
     console.timeEnd("memoised cart calculation");
     return result;
-  }, [cart, allProduct]);
+  }, [cartItems, allProducts]);
 
   const { lines, totalQuantity, totalPrice } = cartInformation;
 
@@ -71,7 +68,7 @@ function Cart({
               My trolley{" "}
               <span className="text-base">({totalQuantity} items)</span>
             </div>
-            {cart.length > 0 ? (
+            {cartItems.length > 0 ? (
               <>
                 <ul>
                   {lines.map((item) => {
@@ -80,10 +77,13 @@ function Cart({
                         className="flex flex-col gap-2 m-4 bg-white p-2"
                         key={item.productId}
                       >
-                        <div className="flex justify-between">
+                        <div
+                          className="flex justify-between"
+                          key={item.productId}
+                        >
                           <div>
                             <img
-                              className="m-2"
+                              className="m-2 w-20"
                               src={item.image}
                               alt={item.title}
                             />
@@ -98,7 +98,7 @@ function Cart({
                             <button
                               className="bg-[#F06c00] hover:bg-[#e55000] w-20 p-1 my-3 text-white font-semibold"
                               aria-label="remove the item"
-                              onClick={() => removeFromCart(item.productId)}
+                              onClick={() => removeFromCart(item.id)}
                             >
                               remove
                             </button>
@@ -107,7 +107,7 @@ function Cart({
                             <button
                               className="bg-[#F06c00] hover:bg-[#e55000] w-10 text-2xl p-1 m-1 text-white font-semibold"
                               aria-label="increase the quantity"
-                              onClick={() => addToCart(item.productId)}
+                              onClick={() => increaseCartItem(item.id)}
                             >
                               +
                             </button>
@@ -117,7 +117,7 @@ function Cart({
                             <button
                               className="bg-[#F06c00] hover:bg-[#e55000] w-10 text-2xl p-1 m-1 text-white font-semibold"
                               aria-label="decrease the quantity"
-                              onClick={() => decreaseCartItem(item.productId)}
+                              onClick={() => decreaseCartItem(item.id)}
                             >
                               -
                             </button>
