@@ -18,16 +18,21 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Cart from "./Cart";
+import {
+  decreaseCartItem,
+  increaseCartItem,
+  removeCartItem,
+} from "./cartUtils";
 
 const URL = "https://jsainsburyplc.github.io/front-end-test/products.json";
 const DEFAULT_ERROR = { errorStatus: false, errorMsg: "" };
 const errorMessage = "Connection failed: Nothing to display";
 
 function SainsburysCart() {
-  const [products, setProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [error, setError] = useState(DEFAULT_ERROR);
   const [isLoading, setIsLoading] = useState(false);
-  const [cart, setCart] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
 
   const { errorStatus, errorMsg } = error;
 
@@ -36,7 +41,7 @@ function SainsburysCart() {
       const res = await axios.get(URL);
       const resData = res.data;
       setIsLoading(true);
-      setProducts(resData);
+      setAllProducts(resData);
       setError(DEFAULT_ERROR);
     } catch (error) {
       console.log(error.message);
@@ -49,24 +54,16 @@ function SainsburysCart() {
     }
   };
 
-  const addToCart = (productId) => {
-    setCart((prev) => [...prev, productId]);
+  const handleIncreaseCartItem = (productId) => {
+    setCartItems((currentItems) => increaseCartItem(currentItems, productId));
   };
 
-  // cart ordering changes since indexOf deturns the first occurrences of index
-  const decreaseCartItem = (productId) => {
-    const decreaseIndex = cart.indexOf(productId);
-    let newCart = [
-      ...cart.slice(0, decreaseIndex),
-      ...cart.slice(decreaseIndex + 1),
-    ];
-
-    setCart(newCart);
+  const handleDecreaseCartItem = (productId) => {
+    setCartItems((currentItems) => decreaseCartItem(currentItems, productId));
   };
 
-  const removeFromCart = (productId) => {
-    const filteredProduct = cart.filter((id) => id !== productId);
-    setCart(filteredProduct);
+  const handleRemoveCartItem = (productId) => {
+    setCartItems(removeCartItem(cartItems, productId));
   };
 
   useEffect(() => {
@@ -82,11 +79,11 @@ function SainsburysCart() {
           </div>
           <div>
             <Cart
-              allProduct={products}
-              cart={cart}
-              addToCart={addToCart}
-              decreaseCartItem={decreaseCartItem}
-              removeFromCart={removeFromCart}
+              allProducts={allProducts}
+              cartItems={cartItems}
+              increaseCartItem={handleIncreaseCartItem}
+              decreaseCartItem={handleDecreaseCartItem}
+              removeCartItem={handleRemoveCartItem}
             />
           </div>
         </header>
@@ -114,7 +111,7 @@ function SainsburysCart() {
 
           <div className="mt-[100px]">
             <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {products.map((item) => {
+              {allProducts.map((item) => {
                 const { title, productId, image, sku, price } = item;
                 return (
                   <div
@@ -137,7 +134,7 @@ function SainsburysCart() {
                       <button
                         className="w-full bg-[#F06c00] hover:bg-[#e55000] text-white font-bold rounded-sm"
                         aria-label="add to basket"
-                        onClick={() => addToCart(productId)}
+                        onClick={() => handleIncreaseCartItem(productId)}
                       >
                         Add
                       </button>
