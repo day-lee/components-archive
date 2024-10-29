@@ -18,6 +18,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Cart from "./Cart";
+import {
+  decreaseCartItem,
+  increaseCartItem,
+  removeCartItem,
+} from "./cartUtils";
 
 const URL = "https://jsainsburyplc.github.io/front-end-test/products.json";
 const DEFAULT_ERROR = { errorStatus: false, errorMsg: "" };
@@ -49,47 +54,16 @@ function SainsburysCart() {
     }
   };
 
-  const increaseCartItem = (productId) => {
-    setCartItems((currentItems) => {
-      if (
-        currentItems.find((item) => item.productId === productId) === undefined
-      ) {
-        return [...currentItems, { productId, quantity: 1 }];
-      } else {
-        return currentItems.map((item) => {
-          if (item.productId === productId) {
-            return { ...item, quantity: item.quantity + 1 };
-          } else {
-            return item;
-          }
-        });
-      }
-    });
+  const handleIncreaseCartItem = (productId) => {
+    setCartItems((currentItems) => increaseCartItem(currentItems, productId));
   };
 
-  const decreaseCartItem = (productId) => {
-    setCartItems((currentItems) => {
-      if (
-        currentItems.find((item) => item.productId === productId).quantity === 1
-      ) {
-        return currentItems.filter((item) => item.productId !== productId);
-      } else {
-        return currentItems.map((item) => {
-          if (item.productId === productId) {
-            return { ...item, quantity: item.quantity - 1 };
-          } else {
-            return item;
-          }
-        });
-      }
-    });
+  const handleDecreaseCartItem = (productId) => {
+    setCartItems((currentItems) => decreaseCartItem(currentItems, productId));
   };
 
-  const removeFromCart = (productId) => {
-    const filteredProduct = cartItems.filter(
-      (item) => item.productId !== productId
-    );
-    setCartItems(filteredProduct);
+  const handleRemoveCartItem = (productId) => {
+    setCartItems(removeCartItem(cartItems, productId));
   };
 
   useEffect(() => {
@@ -106,9 +80,9 @@ function SainsburysCart() {
           <Cart
             allProducts={allProducts}
             cartItems={cartItems}
-            increaseCartItem={increaseCartItem}
-            decreaseCartItem={decreaseCartItem}
-            removeFromCart={removeFromCart}
+            increaseCartItem={handleIncreaseCartItem}
+            decreaseCartItem={handleDecreaseCartItem}
+            removeFromCart={handleRemoveCartItem}
           />
         </div>
       </header>
@@ -159,7 +133,7 @@ function SainsburysCart() {
                     <button
                       className="w-full bg-[#F06c00] hover:bg-[#e55000] text-white font-bold rounded-sm"
                       aria-label="add to basket"
-                      onClick={() => increaseCartItem(productId)}
+                      onClick={() => handleIncreaseCartItem(productId)}
                     >
                       Add
                     </button>
