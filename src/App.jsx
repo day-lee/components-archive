@@ -4,7 +4,7 @@ import "./App.css";
 import Home from "./components/Home";
 import MemeGenerator from "./components/MemeGenerator";
 import Navbar from "./components/Navbar";
-import SainsburysCart from "./components/SainsburysCart";
+import SainsburysCartAPI from "./components/SainsburysCartAPI";
 
 const Supermarket = React.lazy(() => import("./components/Supermarket"));
 
@@ -18,7 +18,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/memegenerator" element={<MemeGenerator />} />
             <Route path="/sainsburys1" element={<Supermarket />} />
-            <Route path="/sainsburys2" element={<SainsburysCart />} />
+            <Route path="/sainsburys2" element={<SainsburysCartAPI />} />
           </Routes>
         </Suspense>
       </main>
